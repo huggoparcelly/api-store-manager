@@ -6,11 +6,11 @@ const { MongoMemoryServer } = require('mongodb-memory-server');
 const mongoConnection = require('../../models/connection');
 const productsModel = require('../../models/productsModel');
 
-describe('No cadastro de um produto', () => {
+describe('Cadastro de um produto no model', () => {
   const DBServer = new MongoMemoryServer();
   let connectionMock;
   
-  const ID_EXAMPLE = "5f43a7ca92d58904914656b6"
+  // const ID_EXAMPLE = "5f43a7ca92d58904914656b6"
   const payloadProduct = {
       name: "Produto do Batista",
       quantity: 100
@@ -42,7 +42,7 @@ describe('No cadastro de um produto', () => {
       expect(response).to.be.an('object');
     });
 
-    it('o objeto deve deve possuir o "id" do novo produto adicionado', async() => {
+    it('o objeto deve deve possuir o "id" do novo produto cadastrado', async() => {
       const response = await productsModel.addProduct(payloadProduct);
 
       expect(response).to.have.a.property('_id');
