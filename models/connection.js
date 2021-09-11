@@ -20,4 +20,4 @@ const connection = () => (db
       return db;
     }));
 
-module.exports = { connection };
+module.exports = connection;

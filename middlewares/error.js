@@ -2,16 +2,16 @@
 
 module.exports = (err, req, res, _next) => {
   if (err.isJoi) {
-    return res.status(400)
+    return res.status(422)
       .json({
         err: {
           message: err.details[0].message,
-          code: 'invalid_data',
+          code: err.data,
         } });
   }
 
   if (err.code) {
-    const statusByErrorCode = { notFound: 404, alreadyExists: 409 };
+    const statusByErrorCode = { notFound: 404, alreadyExists: 422 };
     
     const status = statusByErrorCode[err.code] || 500;
     

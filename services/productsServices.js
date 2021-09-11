@@ -1,27 +1,52 @@
 const productsModel = require('../models/productsModel');
 
-const productIsvalid = (name, quantity) => {
-  if (typeof name !== 'string' || name.length < 5) return false;
-  if (typeof quantity !== 'number' || quantity < 0) return false;
-  return true;
-};
-
 const addProduct = async ({ name, quantity }) => {
-  if (!productIsvalid(name, quantity)) return false;
-  
   const existsProduct = await productsModel.findProductByName(name);
   if (existsProduct) {
     return {
-        error: { 
+        err: { 
           code: 'alreadyExists',
           message: 'Produto já existente', 
         },
       };
-    }
+     }
 
-  const { insertedId: _id } = await productsModel.addProduct({ name, quantity });
-
+  const { _id } = await productsModel.addProduct({ name, quantity });
   return { _id, name, quantity };
 };
 
-module.exports = { addProduct };
+const getAllProducts = async () => {
+  const products = await productsModel.getAllProducts();
+  
+  if (!products) {
+    return {
+      err: {
+        message: 'Wrong id format',
+        code: 'invalid_data',
+      },
+    };
+  }
+
+  return products;
+};
+
+const findProductById = async (id) => {
+  const product = await productsModel.findProductById(id);
+
+  if (!product) {
+    return {
+      err: {
+        message: 'Wrong id format',
+        code: 'invalid_data',
+      },
+    };
+  }
+
+  return product;
+};
+
+module.exports = { 
+  addProduct, 
+  getAllProducts, 
+  findProductById,
+};
