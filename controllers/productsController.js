@@ -44,9 +44,22 @@ const updateProduct = (async (req, res) => {
   return res.status(StatusCodes.OK).json(productUpdated);
 });
 
+const removeProduct = (async (req, res) => {
+  const { id } = req.params;
+
+  const productRemoved = await productsService.removeProduct(id);
+  if (productRemoved.err) {
+ return res.status(StatusCodes.UNPROCESSABLE_ENTITY)
+    .json(productRemoved); 
+}
+
+  return res.status(StatusCodes.OK).json(productRemoved);
+});
+
 module.exports = { 
   addProduct,
   getAllProducts,
   findProductById,
   updateProduct,
+  removeProduct,
 };
