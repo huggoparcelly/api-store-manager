@@ -21,8 +21,19 @@ const findProductById = async (id) => {
   return productsModel.findProductById(id);
 };
 
+const updateProduct = async (id, name, quantity) => {
+  const validations = productSchema.isValidProduct(name, quantity);
+  if (validations.err) return validations;
+
+  const productNotFound = await productSchema.findProduct(id);
+  if (productNotFound.err) return productNotFound;
+
+  return productsModel.updateProduct({ id, name, quantity });
+};
+
 module.exports = { 
   addProduct, 
   getAllProducts, 
   findProductById,
+  updateProduct,
 };
