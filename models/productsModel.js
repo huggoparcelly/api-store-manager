@@ -1,8 +1,8 @@
 const { ObjectId } = require('mongodb');
-const mongoConnection = require('./connection');
+const { connection } = require('./connection');
 
 const addProduct = async ({ name, quantity }) => {
-  const products = await mongoConnection()
+  const products = await connection()
     .then((db) => db.collection('products'));
 
   const { insertedId: _id } = await products.insertOne({ name, quantity });
@@ -11,7 +11,7 @@ const addProduct = async ({ name, quantity }) => {
 };
 
 const findProductByName = async (name) => {
-  const product = await mongoConnection()
+  const product = await connection()
     .then((db) => db.collection('products').findOne({ name }));
 
   if (!product) return null;
@@ -22,7 +22,7 @@ const findProductByName = async (name) => {
 };
 
 const getAllProducts = async () => {
-  const products = await mongoConnection()
+  const products = await connection()
     .then((db) => db.collection('products').find().toArray());
   
   return { products };
@@ -33,7 +33,7 @@ const findProductById = async (id) => {
     return null;
   }
 
-  const product = await mongoConnection()
+  const product = await connection()
     .then((db) => db.collection('products').findOne(new ObjectId(id)));
   
   if (!product) return null;
