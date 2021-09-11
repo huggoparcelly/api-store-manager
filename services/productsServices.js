@@ -1,15 +1,12 @@
 const productsModel = require('../models/productsModel');
+const productSchema = require('../schemas/productSchema');
 
-const addProduct = async ({ name, quantity }) => {
-  const existsProduct = await productsModel.findProductByName(name);
-  if (existsProduct) {
-    return {
-        err: { 
-          code: 'alreadyExists',
-          message: 'Produto já existente', 
-        },
-      };
-     }
+const addProduct = async (name, quantity) => {
+  const validations = productSchema.isValidProduct(name, quantity);
+  if (validations.err) return validations;
+
+  const existsProduct = await productSchema.existsProduct(name);
+  if (existsProduct.err) return existsProduct;
 
   const { _id } = await productsModel.addProduct({ name, quantity });
   return { _id, name, quantity };
