@@ -9,10 +9,17 @@ const productIsvalid = (name, quantity) => {
 const addProduct = async ({ name, quantity }) => {
   if (!productIsvalid(name, quantity)) return false;
   
-  // const existsProduct = await productsModel.findProductByName(name);
-  // if (existsProduct) return false;
+  const existsProduct = await productsModel.findProductByName(name);
+  if (existsProduct) {
+    return {
+        error: { 
+          code: 'alreadyExists',
+          message: 'Produto já existente', 
+        },
+      };
+    }
 
-  const { _id } = await productsModel.addProduct({ name, quantity });
+  const { insertedId: _id } = await productsModel.addProduct({ name, quantity });
 
   return { _id, name, quantity };
 };
