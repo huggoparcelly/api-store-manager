@@ -12,34 +12,13 @@ const addProduct = async (name, quantity) => {
   return { _id, name, quantity };
 };
 
-const getAllProducts = async () => {
-  const products = await productsModel.getAllProducts();
-  
-  if (!products) {
-    return {
-      err: {
-        message: 'Wrong id format',
-        code: 'invalid_data',
-      },
-    };
-  }
-
-  return products;
-};
+const getAllProducts = async () => productsModel.getAllProducts();
 
 const findProductById = async (id) => {
-  const product = await productsModel.findProductById(id);
+  const productNotFound = await productSchema.findProduct(id);
+  if (productNotFound.err) return productNotFound;
 
-  if (!product) {
-    return {
-      err: {
-        message: 'Wrong id format',
-        code: 'invalid_data',
-      },
-    };
-  }
-
-  return product;
+  return productsModel.findProductById(id);
 };
 
 module.exports = { 

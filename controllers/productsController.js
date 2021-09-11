@@ -25,6 +25,8 @@ const findProductById = (async (req, res) => {
 
   const product = await productsService.findProductById(id);
 
+  if (product.err) return res.status(StatusCodes.UNPROCESSABLE_ENTITY).json(product);
+
   return res.status(StatusCodes.OK).json(product);
 });
 

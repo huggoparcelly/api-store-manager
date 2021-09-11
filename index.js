@@ -2,7 +2,6 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 const productsController = require('./controllers/productsController');
-const errorMiddleware = require('./middlewares/error');
 
 const app = express();
 app.use(bodyParser.json());
@@ -15,8 +14,6 @@ app.get('/', (_request, response) => {
 app.post('/products', productsController.addProduct);
 app.get('/products', productsController.getAllProducts);
 app.get('/products/:id', productsController.findProductById);
-
-app.use(errorMiddleware);
 
 const PORT = process.env.PORT || 3000;
 

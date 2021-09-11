@@ -28,16 +28,15 @@ const isValidProduct = (name, quantity) => {
 const existsProduct = async (name) => {
   const existsProd = await productsModel.findProductByName(name);
   
-  if (existsProd) {
-    return {
-        err: { 
-          code: 'invalid_data',
-          message: erros.existsProduct, 
-        },
-      };
-     }
+  if (existsProd) return { err: { code: 'invalid_data', message: erros.existsProduct } };
   
   return {};
 };
 
-module.exports = { isValidProduct, existsProduct };
+const findProduct = async (id) => {
+  const findProd = await productsModel.findProductById(id);
+  if (!findProd) return { err: { message: 'Wrong id format', code: 'invalid_data' } };
+  return {};
+};
+
+module.exports = { isValidProduct, existsProduct, findProduct };

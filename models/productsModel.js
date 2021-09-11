@@ -24,8 +24,6 @@ const findProductByName = async (name) => {
 const getAllProducts = async () => {
   const products = await mongoConnection()
     .then((db) => db.collection('products').find().toArray());
-
-  if (!products.length) return null;
   
   return { products };
 };
@@ -34,8 +32,9 @@ const findProductById = async (id) => {
   if (!ObjectId.isValid(id)) {
     return null;
   }
+
   const product = await mongoConnection()
-    .then((db) => db.collection.findOne(new ObjectId(id)));
+    .then((db) => db.collection('products').findOne(new ObjectId(id)));
   
   if (!product) return null;
 
