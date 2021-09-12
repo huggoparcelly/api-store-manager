@@ -30,13 +30,17 @@ const findSalesById = async (id) => {
   return sale;
 };
 
+// const updateSale = async() => {
+
+// };
+
 const removeSale = async (id) => {
   if (!ObjectId.isValid(id)) {
     return null;
   }
 
   const saleRemoved = await connection()
-    .then((db) => db.collection('products').deleteOne({ _id: new ObjectId(id) }));
+    .then((db) => db.collection('sales').deleteOne({ _id: new ObjectId(id) }));
 
   const { _id, itensSold } = saleRemoved;
   return { _id, itensSold };
@@ -45,6 +49,7 @@ const removeSale = async (id) => {
 module.exports = { 
   addSale, 
   getAllSales, 
-  findSalesById, 
+  findSalesById,
+  // updateSale,
   removeSale,
 };

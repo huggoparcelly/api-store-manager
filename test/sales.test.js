@@ -648,7 +648,7 @@ describe('8 - Crie um endpoint para deletar uma venda', () => {
       });
   });
 
-  it.skip('Será validado que não é possível deletar uma venda que não existe', async () => {
+  it('Será validado que não é possível deletar uma venda que não existe', async () => {
     await frisby
       .delete(`${url}/sales/${invalidId}`)
       .expect('status', 422)

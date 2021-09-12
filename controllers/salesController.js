@@ -30,7 +30,7 @@ const removeSale = (async (req, res) => {
   
   const saleRemoved = await salesService.removeSale(id);
   if (saleRemoved.err) {
-    return res.status(StatusCodes.NOT_FOUND)
+    return res.status(StatusCodes.UNPROCESSABLE_ENTITY)
        .json(saleRemoved); 
    }
 

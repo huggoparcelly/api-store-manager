@@ -23,7 +23,7 @@ const findSalesById = async (id) => {
 };
 
 const removeSale = async (id) => {
-  const saleNotFound = await saleSchema.findSale(id);
+  const saleNotFound = await saleSchema.findSaleInvalid(id);
   if (saleNotFound.err) return saleNotFound;
 
   return salesModel.removeSale(id);
