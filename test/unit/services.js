@@ -5,7 +5,7 @@ const { expect } = require('chai');
 const productsModel = require('../../models/productsModel');
 const productsService = require('../../services/productsServices');
 
-describe('Testes da camada service', () => {
+describe('Testes produto da camada service', () => {
   const ID_EXAMPLE = "5f43a7ca92d58904914656b6"
   const payloadProduct = {
     name: "Produto do Batista",
@@ -17,16 +17,16 @@ describe('Testes da camada service', () => {
 
   describe('Cadastro de um produto', () => {
     
-    before(() => {
-      sinon.stub(productsModel, 'addProduct')
-        .resolves({_id: ObjectId(ID_EXAMPLE)}, payloadProduct);
-    });
-  
-    after(() => {
-      productsModel.addProduct.restore();
-    });
-  
     describe('quando um produto é cadastrado com sucesso', () => {
+
+      before(() => {
+        sinon.stub(productsModel, 'addProduct')
+          .resolves({_id: ObjectId(ID_EXAMPLE)}, payloadProduct);
+      });
+    
+      after(() => {
+        productsModel.addProduct.restore();
+      });
       
       it('retorna um objeto',  async() => {
         const response = await productsService.addProduct(payloadProduct);
@@ -44,6 +44,8 @@ describe('Testes da camada service', () => {
   
     describe('quando não é possível cadastrar um produto', () => {
       
+      // FALTA BEFORE E AFTER
+
       describe('quando o payload informado é inválido', () => {
   
         it('retorna um objeto com erro', async () => {
@@ -92,6 +94,8 @@ describe('Testes da camada service', () => {
 
     describe('quando não existe nenhum produto criado', () => {
       
+      // FALTA BEFORE E AFTER
+
       it('retorna um objeto', async() => {
         const products = await productsService.getAllProducts();
         expect(products).to.be.an('object');
@@ -115,6 +119,16 @@ describe('Testes da camada service', () => {
     });
 
     describe('quando existem produtos na lista', () => {
+
+      before(() => {
+        sinon.stub(productsModel, 'getAllProducts')
+          .resolves({products: [ObjectId(ID_EXAMPLE), payloadProduct]});
+      });
+  
+      after(() => {
+        productsModel.getAllProducts.restore();
+      });
+
       it('retorna um objeto', async() => {
         const products = await productsService.getAllProducts();
         expect(products).to.be.an('object');
@@ -143,6 +157,8 @@ describe('Testes da camada service', () => {
 
     describe('quando o "id" informado é inválido', () => {
 
+      // FALTA BEFORE E AFTER
+
       it('retorna um objeto', async() => {
         const response = await productsService.findProductById(ID_WRONG);
         expect(response).to.be.an('object');
@@ -162,6 +178,8 @@ describe('Testes da camada service', () => {
 
     describe('quando o produto não existe', () => {
 
+      // FALTA BEFORE E AFTER
+
       it('retorna um objeto', async() => {
         const response = await productsService.findProductById(ID_EXAMPLE);
         expect(response).to.be.an('object');
@@ -177,11 +195,53 @@ describe('Testes da camada service', () => {
         expect(response.err.message).to.be.equal('Wrong id format');
       });
     });
+
+    describe('quando o produto existe', () => {
+
+      before(() => {
+        sinon.stub(productsModel, 'findProductById')
+          .resolves({_id: ObjectId(ID_EXAMPLE), name:payloadProduct.name, quantity: payloadProduct.quantity});
+      });
+  
+      after(() => {
+        productsModel.findProductById.restore();
+      });
+
+      it('retorna um objeto', async () => {
+        const {_id } = await productsService.addProduct(payloadProduct);
+    
+        const response = await productsService.findProductById(_id);
+        
+        expect(response).to.be.an('object');
+      });
+
+      it('o objeto possui as propriedades "_id", "name" e "quantity"', async () => {
+        const { _id } = await productsService.addProduct(payloadProduct);
+
+        const response = await productsService.findProductById(_id);
+        // console.log(response);
+        expect(response).include.all.keys(['_id', 'name', 'quantity']);
+      });
+
+      // DÚVIDA OS ID ESTÃO IGUAIS, PORÉM ESTÁ COM PROBLEMA NO TIPO
+      // it('o produto encontrado possui o mesmo "id" buscado', async() => {
+      //   const { _id } = await productsModel.addProduct(payloadProduct);
+
+      //   const response = await productsModel.findProductById(_id);
+      //   const { _id: idExpected } = response;
+      //   console.log(idExpected);
+      //   console.log(_id);
+      //   expect(idExpected).to.be.equal(_id);
+      // })
+    })
+    
   });
 
   describe('Atualiza um produto cadastrado', () => {
 
     describe('quando o "id" informado é inválido', () => {
+
+      // FALTA BEFORE E AFTER
 
       it('retorna um objeto', async() => {
         const response = await productsService.updateProduct(ID_WRONG, payloadProduct.name, payloadProduct.quantity);
@@ -200,6 +260,9 @@ describe('Testes da camada service', () => {
     });
 
     describe('quando o payload informado é inválido', () => {
+
+      // FALTA BEFORE E AFTER
+
       it('retorna um objeto com erro', async () => {
         const response = await productsService.updateProduct(ID_EXAMPLE, wrongPayloadProduct.name, wrongPayloadProduct.quantity);
         expect(response).to.be.an('object');
@@ -213,6 +276,7 @@ describe('Testes da camada service', () => {
     });
 
     // ERRO, NÃO CONSEGUE ADICIONAR O PRODUTO, POIS RETORNA COMO JÁ EXISTENTE
+    // FALTA BEFORE E AFTER
     // FALTA DROPAR O BANCO DE DADOS
     // describe('quando o produto é atualizado com sucesso', () => {
     //   const newPayloadProduct = {
@@ -251,6 +315,9 @@ describe('Testes da camada service', () => {
   describe('Deleta um produto', () => {
 
     describe('quando o "id" informado é inválido', () => {
+      
+      // FALTA BEFORE E AFTER
+
       it('retorna um objeto', async() => {
         const response = await productsService.removeProduct(ID_WRONG);
         expect(response).to.be.an('object');
@@ -269,6 +336,8 @@ describe('Testes da camada service', () => {
 
     describe('quando o produto é deletado', () => {
       
+      // FALTA BEFORE E AFTER
+
       it('retorna um objeto', async() => {
         const {_id} = await productsService.addProduct(payloadProduct.name, payloadProduct.quantity);
         const response = await productsService.removeProduct(_id);

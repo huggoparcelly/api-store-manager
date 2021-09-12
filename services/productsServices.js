@@ -18,7 +18,9 @@ const findProductById = async (id) => {
   const productNotFound = await productSchema.findProduct(id);
   if (productNotFound.err) return productNotFound;
 
-  return productsModel.findProductById(id);
+  const productFinded = await productsModel.findProductById(id);
+  const { _id, name, quantity } = productFinded;
+  return { _id, name, quantity };
 };
 
 const updateProduct = async (id, name, quantity) => {

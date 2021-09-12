@@ -8,7 +8,7 @@ const mongoConnection = require('../../models/connection');
 const productsModel = require('../../models/productsModel');
 const { isRef } = require('joi');
 
-describe('Testes na camada Model', () => {
+describe('Testes produtos na camada Model', () => {
   let connectionMock;
 
   const ID_EXAMPLE = "5f43a7ca92d58904914656b6";
