@@ -25,8 +25,21 @@ const findSalesById = (async (req, res) => {
   return res.status(StatusCodes.OK).json(sale);
 });
 
+const removeSale = (async (req, res) => {
+  const { id } = req.params;
+  
+  const saleRemoved = await salesService.removeSale(id);
+  if (saleRemoved.err) {
+    return res.status(StatusCodes.NOT_FOUND)
+       .json(saleRemoved); 
+   }
+
+  return res.status(StatusCodes.OK).json(saleRemoved);
+});
+
 module.exports = { 
   addSale, 
   getAllSales, 
   findSalesById,
+  removeSale,
 };

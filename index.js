@@ -22,6 +22,8 @@ app.post('/sales', salesController.addSale);
 app.get('/sales', salesController.getAllSales);
 app.get('/sales/:id', salesController.findSalesById);
 
+app.delete('/sales/:id', salesController.removeSale);
+
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => console.log(`Ouvindo na porta ${PORT}`));

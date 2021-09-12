@@ -22,8 +22,16 @@ const findSalesById = async (id) => {
   return { _id, intensSold };
 };
 
+const removeSale = async (id) => {
+  const saleNotFound = await saleSchema.findSale(id);
+  if (saleNotFound.err) return saleNotFound;
+
+  return salesModel.removeSale(id);
+};
+
 module.exports = { 
   addSale, 
   getAllSales,
   findSalesById,
+  removeSale,
 };
