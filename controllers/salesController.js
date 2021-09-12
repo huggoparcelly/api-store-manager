@@ -15,4 +15,18 @@ const getAllSales = (async (req, res) => {
   return res.status(StatusCodes.OK).json(sales);
 });
 
-module.exports = { addSale, getAllSales };
+const findSalesById = (async (req, res) => {
+  const { _id } = req.params;
+
+  const sale = await salesService.findSalesById(_id);
+
+  if (sale.err) return res.status(StatusCodes.NOT_FOUND).json(sale);
+  
+  return res.status(StatusCodes.OK).json(sale);
+});
+
+module.exports = { 
+  addSale, 
+  getAllSales, 
+  findSalesById,
+};

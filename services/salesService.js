@@ -1,8 +1,8 @@
 const salesModel = require('../models/salesModel');
-// const productSchema = require('../schemas/productSchema');
+const saleSchema = require('../schemas/saleSchema');
 
 const addSale = async (sales) => {
-  // VALIDAÇÃO QUE O PRODUTO EXISTE, PROBLEMA EM RETIRAR O ID e  DO ARRAY
+  // VALIDAÇÃO QUE O PRODUTO EXISTE, PROBLEMA EM RETIRAR O ID e QUANTITY DO ARRAY
 
   const newSale = await salesModel.addSale(sales);
 
@@ -11,4 +11,19 @@ const addSale = async (sales) => {
 
 const getAllSales = async () => salesModel.getAllSales();
 
-module.exports = { addSale, getAllSales };
+const findSalesById = async (id) => {
+  const saleNotFound = await saleSchema.findSale(id);
+  if (saleNotFound.err) return saleNotFound;
+
+  const saleFinded = await salesModel.findProductById(id);
+
+  const { _id, intensSold } = saleFinded;
+
+  return { _id, intensSold };
+};
+
+module.exports = { 
+  addSale, 
+  getAllSales,
+  findSalesById,
+};
