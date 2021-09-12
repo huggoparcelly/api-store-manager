@@ -10,6 +10,8 @@ const { isRef } = require('joi');
 
 describe('Testes na camada Model', () => {
   let connectionMock;
+
+  const ID_EXAMPLE = "5f43a7ca92d58904914656b6";
   const payloadProduct = {
     name: "Produto do Batista",
     quantity: 100
@@ -63,7 +65,7 @@ describe('Testes na camada Model', () => {
     })
   });
   
-  describe('Busca todos a lista de produtos', () => {
+  describe('Busca todos os produtos da lista', () => {
 
     describe('quanto não existe nenhum produto criado', () => {
       
@@ -113,7 +115,6 @@ describe('Testes na camada Model', () => {
   });
 
   describe('Busca um produto pelo id', () => {
-    const ID_EXAMPLE = "5f43a7ca92d58904914656b6";
 
     describe('quando o "id" informado é inválido', () => {
       const ID_WRONG = '123'
@@ -158,5 +159,85 @@ describe('Testes na camada Model', () => {
       //   expect(idExpected).to.be.equal(_id);
       // })
     });
+  });
+
+  describe('Atualiza um produto cadastrado', () => {
+    
+    describe('quando o "id" informado é inválido', () => {
+      const ID_WRONG = '123'
+      it('a resposta é "null"', async() => {
+        const response = await productsModel.updateProduct(ID_WRONG);
+        expect(response).to.be.null;
+      });
+    });
+
+    describe('quando o produto é atualizado com sucesso', () => {
+      
+      const newPayloadProduct = {
+        name: 'Produto do João',
+        quantity: 5
+      }
+
+      it('retorna um objeto', async () => {
+        const {_id } = await productsModel.addProduct(payloadProduct);
+        const response = await productsModel.updateProduct(_id, newPayloadProduct.name, newPayloadProduct.quantity);
+        expect(response).to.be.an('object');
+      });
+
+      it('o objeto possui as propriedades "_id", "name" e "quantity"', async () => {
+        const { _id } = await productsModel.addProduct(payloadProduct);
+        const response = await productsModel.updateProduct(_id, newPayloadProduct.name, newPayloadProduct.quantity);
+        expect(response).include.all.keys(['_id', 'name', 'quantity']);
+      });
+
+      it('o produto possui um novo nome e uma nova quantidade', async () => {
+        const { _id } = await productsModel.addProduct(payloadProduct);
+        const productUpdated = await productsModel.updateProduct(_id, newPayloadProduct.name, newPayloadProduct.quantity);
+
+        const {_id: idExpected, name, quantity} = productUpdated;
+
+        // adicionar o teste do id igual
+        expect(name).to.not.equal(payloadProduct.name);
+        expect(quantity).to.not.equal(payloadProduct.quantity);
+      });
+    });
+    
+  });
+
+  describe('Deleta um produto', () => {
+    describe('quando o "id" informado é inválido', () => {
+      const ID_WRONG = '123'
+      it('a resposta é "null"', async() => {
+        const response = await productsModel.removeProduct(ID_WRONG);
+        expect(response).to.be.null;
+      });
+    });
+
+    describe('quando o produto é deletado', () => {
+      it('retorna um objeto', async() => {
+        const {_id} = await productsModel.addProduct(payloadProduct);
+        const response = await productsModel.removeProduct(_id);
+        expect(response).to.be.an('object');
+      });
+
+      it('o objeto possui as propriedades "_id", "name" e "quantity" do produto deletado', async () => {
+        const { _id } = await productsModel.addProduct(payloadProduct);
+        const response = await productsModel.removeProduct(_id);
+        const {name, quantity} = response;
+
+        // adicionar o teste do id igual
+        expect(name).to.not.equal(payloadProduct.name);
+        expect(quantity).to.not.equal(payloadProduct.quantity);
+      });
+
+      it('o produto não está na lista', async () => {
+        const { _id } = await productsModel.addProduct(payloadProduct);
+        await productsModel.removeProduct(_id);
+        
+        const findProductRemoved = await connectionMock.collection('products').findOne({ _id });
+        expect(findProductRemoved).to.be.null;
+      });
+    });
+    
   })
 });
