@@ -2,11 +2,10 @@ const salesModel = require('../models/salesModel');
 const saleSchema = require('../schemas/saleSchema');
 
 const addSale = async (sales) => {
-  // VALIDAÇÃO QUE O PRODUTO EXISTE, PROBLEMA EM RETIRAR O ID e QUANTITY DO ARRAY
-
-  const newSale = await salesModel.addSale(sales);
-
-  return newSale;
+  const validation = saleSchema.isValidQuantity(sales);
+  
+  if (validation.err) return validation;
+  return salesModel.addSale(sales);
 };
 
 const getAllSales = async () => salesModel.getAllSales();
