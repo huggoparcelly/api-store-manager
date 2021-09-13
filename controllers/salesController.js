@@ -20,9 +20,9 @@ const getAllSales = (async (req, res) => {
 });
 
 const findSalesById = (async (req, res) => {
-  const { _id } = req.params;
+  const { id } = req.params;
 
-  const sale = await salesService.findSalesById(_id);
+  const sale = await salesService.findSalesById(id);
 
   if (sale.err) return res.status(StatusCodes.NOT_FOUND).json(sale);
   

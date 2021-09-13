@@ -1,4 +1,5 @@
 const salesModel = require('../models/salesModel');
+const productModel = require('../models/productsModel');
 
 const erros = {
   saleNotFound: 'Sale not found',
@@ -34,4 +35,29 @@ const isValidQuantity = (sales) => {
   return {};
 };
 
-module.exports = { findSale, findSaleInvalid, isValidQuantity };
+const updateQuantity = (sales) => {
+  sales.forEach(async (sale) => {
+    const product = await productModel.findProductById(sale.productId);
+    const newQuantity = product.quantity - sale.quantity;
+    const updatedProduct = { id: sale.productId, name: product.name, quantity: newQuantity };
+    await productModel.updateProduct(updatedProduct);
+  });
+};
+
+const saleRemoved = async (id) => {
+  const saleFinded = await salesModel.findSalesById(id);
+  saleFinded.itensSold.forEach(async (sale) => {
+    const product = await productModel.findProductById(sale.productId);
+    const newQuantity = product.quantity + sale.quantity;
+    const updatedProduct = { id: sale.productId, name: product.name, quantity: newQuantity };
+    await productModel.updateProduct(updatedProduct);
+  });
+};
+
+module.exports = { 
+  findSale, 
+  findSaleInvalid, 
+  isValidQuantity, 
+  updateQuantity,
+  saleRemoved,
+ };

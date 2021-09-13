@@ -5,6 +5,8 @@ const addSale = async (sales) => {
   const validation = saleSchema.isValidQuantity(sales);
   if (validation.err) return validation;
 
+  await saleSchema.updateQuantity(sales);
+
   return salesModel.addSale(sales);
 };
 
@@ -14,11 +16,11 @@ const findSalesById = async (id) => {
   const saleNotFound = await saleSchema.findSale(id);
   if (saleNotFound.err) return saleNotFound;
 
-  const saleFinded = await salesModel.findProductById(id);
+  const saleFinded = await salesModel.findSalesById(id);
+  
+  const { _id, itensSold } = saleFinded;
 
-  const { _id, intensSold } = saleFinded;
-
-  return { _id, intensSold };
+  return { _id, itensSold };
 };
 
 const updateSale = async (id, sale) => {
@@ -38,6 +40,8 @@ const updateSale = async (id, sale) => {
 const removeSale = async (id) => {
   const saleNotFound = await saleSchema.findSaleInvalid(id);
   if (saleNotFound.err) return saleNotFound;
+  
+  await saleSchema.saleRemoved(id);
 
   return salesModel.removeSale(id);
 };

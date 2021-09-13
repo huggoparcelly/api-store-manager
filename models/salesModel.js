@@ -26,7 +26,7 @@ const findSalesById = async (id) => {
     .then((db) => db.collection('sales').findOne(new ObjectId(id)));
   
   if (!sale) return null;
-
+  
   return sale;
 };
 
