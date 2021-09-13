@@ -5,11 +5,13 @@ const erros = {
   saleNotFound: 'Sale not found',
   wrongSaleId: 'Wrong sale ID format',
   wrongIdOrQuant: 'Wrong product ID or invalid quantity',
+  notPermittedSell: 'Such amount is not permitted to sell',
 };
 
 const codes = {
   notFound: 'not_found',
   invalidData: 'invalid_data',
+  stockProblem: 'stock_problem',
 };
 
 const isNotInteger = (value) => (!Number.isInteger(value));
@@ -54,10 +56,30 @@ const saleRemoved = async (id) => {
   });
 };
 
+const isBiggestThan = (value1, value2) => (value1 <= value2);
+
+const stockValidate = (sales) => {
+  // capturar o id do produto sale.productId
+  // capturar a quantidade das vendas
+  // capturar o produto pelo id findProductById(sale.productId)
+  // capturar a quantidade dos produtos cadastrados
+  // comparar se a quantidade da vendas é menor ou igual a de produtos cadastrados
+
+  const validation = sales.some(async (sale) => {
+    const product = await productModel.findProductById(sale.productId);
+    isBiggestThan(sale.quantity, product.quantity);
+  });
+
+  if (!validation) return { err: { code: codes.stockProblem, message: erros.notPermittedSell } };
+  // erro para a validação
+  return {};
+};
+
 module.exports = { 
   findSale, 
   findSaleInvalid, 
   isValidQuantity, 
   updateQuantity,
   saleRemoved,
+  stockValidate,
  };
