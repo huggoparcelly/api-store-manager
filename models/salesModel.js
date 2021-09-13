@@ -30,9 +30,17 @@ const findSalesById = async (id) => {
   return sale;
 };
 
-// const updateSale = async() => {
+const updateSale = async (id, sale) => {
+  if (!ObjectId.isValid(id)) {
+    return null;
+  }
 
-// };
+  await connection()
+    .then((db) => db.collection('sales')
+    .updateOne({ _id: new ObjectId(id) }, { $set: { itensSold: sale } }));
+
+  return { _id: id, itensSold: sale };
+};
 
 const removeSale = async (id) => {
   if (!ObjectId.isValid(id)) {
@@ -50,6 +58,6 @@ module.exports = {
   addSale, 
   getAllSales, 
   findSalesById,
-  // updateSale,
+  updateSale,
   removeSale,
 };

@@ -29,6 +29,18 @@ const findSalesById = (async (req, res) => {
   return res.status(StatusCodes.OK).json(sale);
 });
 
+const updateSale = (async (req, res) => {
+  const { id } = req.params;
+  const saleUpdated = await salesService.updateSale(id, req.body);
+  
+  if (saleUpdated.err) {
+    return res.status(StatusCodes.UNPROCESSABLE_ENTITY)
+       .json(saleUpdated); 
+   }
+
+  return res.status(StatusCodes.OK).json(saleUpdated);
+});
+
 const removeSale = (async (req, res) => {
   const { id } = req.params;
   
@@ -45,5 +57,6 @@ module.exports = {
   addSale, 
   getAllSales, 
   findSalesById,
+  updateSale,
   removeSale,
 };
