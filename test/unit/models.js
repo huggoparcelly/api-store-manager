@@ -34,17 +34,14 @@ describe('Testes produtos na camada Model', () => {
   after(() => {
     mongoConnection.connection.restore();
   });
+
   describe('Cadastro de um produto', () => {
-
-    // after(async() => {
-    //   await connectionMock.collection('products').deleteMany({});
-    // })
-
+    
     describe('quando um produto é cadastrado com sucesso', () => {
-  
+
       it('retorna um objeto', async () => {
         const response = await productsModel.addProduct(payloadProduct);
-  
+        
         expect(response).to.be.an('object');
       });
   
@@ -52,63 +49,47 @@ describe('Testes produtos na camada Model', () => {
         const response = await productsModel.addProduct(payloadProduct);
   
         expect(response).to.have.a.property('_id');
-      })
-  
-      // dúvida porque o productCreated retorna null.
-      // it('deve existir um produto com o nome cadastrado', async() => {
-      //   await productsModel.addProduct(payloadProduct);
-        
-      //   const productCreated = await connectionMock.collection('products').findOne({ name: payloadProduct.name });
-  
-      //   expect(productCreated).to.be.not.null;
-      // })
-    })
+      });
+    });
+
+  });
+
+  describe('Busca um produto pelo nome', () => {
+    it('retorna um objeto', async () => {
+      const response = await productsModel.findProductByName(payloadProduct.name);
+      
+      expect(response).to.be.an('object');
+    });
   });
   
   describe('Busca todos os produtos da lista', () => {
 
     describe('quanto não existe nenhum produto criado', () => {
       
-      it('retorna um objeto', async() => {
+      it('retorna um array', async() => {
         const products = await productsModel.getAllProducts();
-        expect(products).to.be.an('object');
-      });
-
-      it('o objeto tem a propriedade "products"', async() => {
-        const products = await productsModel.getAllProducts();
-        expect(products).to.have.a.property('products');
-      });
-
-      it('a propriedade "products" é um array', async() => {
-        const { products } = await productsModel.getAllProducts();
+        
         expect(products).to.be.an('array');
       });
 
       // DÚVIDA, O ARRAY NÃO ESTÁ FICANDO VAZIO APÓS O TESTE ANTERIOR
       // it('o array é vazio', async() => {
-      //   const { products } = await productsModel.getAllProducts();
+      //   const products = await productsModel.getAllProducts();
+      //   console.log(products);
       //   expect(products).to.be.empty;
       // });
+
     });
 
     describe('quando existem produtos na lista', () => {
-      it('retorna um objeto', async() => {
-        const products = await productsModel.getAllProducts();
-        expect(products).to.be.an('object');
-      });
 
-      it('o objeto tem a propriedade "products"', async() => {
+      it('retorna um array', async() => {
         const products = await productsModel.getAllProducts();
-        expect(products).to.have.a.property('products');
-      });
-
-      it('a propriedade "products" é um array', async() => {
-        const { products } = await productsModel.getAllProducts();
         expect(products).to.be.an('array');
       });
 
       it('o array está populado', async() => {
-        const { products } = await productsModel.getAllProducts();
+        const products = await productsModel.getAllProducts();
         expect(products).to.be.not.empty;
       });
     })
@@ -148,16 +129,12 @@ describe('Testes produtos na camada Model', () => {
         expect(response).include.all.keys(['_id', 'name', 'quantity']);
       });
 
-      // DÚVIDA OS ID ESTÃO IGUAIS, PORÉM ESTÁ COM PROBLEMA NO TIPO
-      // it('o produto encontrado possui o mesmo "id" buscado', async() => {
-      //   const { _id } = await productsModel.addProduct(payloadProduct);
-
-      //   const response = await productsModel.findProductById(_id);
-      //   const { _id: idExpected } = response;
-      //   console.log(idExpected);
-      //   console.log(_id);
-      //   expect(idExpected).to.be.equal(_id);
-      // })
+      it('o produto encontrado possui o mesmo "id" buscado', async() => {
+        const { _id } = await productsModel.addProduct(payloadProduct);
+        const response = await productsModel.findProductById(_id);
+        const { _id: idExpected } = response;
+        expect(JSON.stringify(idExpected)).to.be.equal(JSON.stringify(_id));
+      })
     });
   });
 
@@ -192,11 +169,12 @@ describe('Testes produtos na camada Model', () => {
 
       it('o produto possui um novo nome e uma nova quantidade', async () => {
         const { _id } = await productsModel.addProduct(payloadProduct);
-        const productUpdated = await productsModel.updateProduct(_id, newPayloadProduct.name, newPayloadProduct.quantity);
-
-        const {_id: idExpected, name, quantity} = productUpdated;
-
-        // adicionar o teste do id igual
+        
+        const productUpdated = await productsModel
+          .updateProduct({id: _id, name: newPayloadProduct.name, quantity: newPayloadProduct.quantity});
+        
+        const { name, quantity} = productUpdated;
+        
         expect(name).to.not.equal(payloadProduct.name);
         expect(quantity).to.not.equal(payloadProduct.quantity);
       });
@@ -220,14 +198,11 @@ describe('Testes produtos na camada Model', () => {
         expect(response).to.be.an('object');
       });
 
-      it('o objeto possui as propriedades "_id", "name" e "quantity" do produto deletado', async () => {
+      it('o objeto possui as propriedades "_id", "name" e "quantity"', async () => {
         const { _id } = await productsModel.addProduct(payloadProduct);
         const response = await productsModel.removeProduct(_id);
-        const {name, quantity} = response;
-
-        // adicionar o teste do id igual
-        expect(name).to.not.equal(payloadProduct.name);
-        expect(quantity).to.not.equal(payloadProduct.quantity);
+        
+        expect(response).to.have.all.keys(['_id', 'name', 'quantity'])
       });
 
       it('o produto não está na lista', async () => {
@@ -239,5 +214,5 @@ describe('Testes produtos na camada Model', () => {
       });
     });
     
-  })
+  });
 });
