@@ -25,7 +25,7 @@ const getAllProducts = async () => {
   const products = await connection()
     .then((db) => db.collection('products').find().toArray());
   
-  return { products };
+  return products;
 };
 
 const findProductById = async (id) => {

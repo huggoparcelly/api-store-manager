@@ -1,3 +1,4 @@
+const { StatusCodes } = require('http-status-codes');
 const salesModel = require('../models/salesModel');
 const productModel = require('../models/productsModel');
 
@@ -33,7 +34,13 @@ const isValidQuantity = (sales) => {
   const isNotValid = sales.some((sale) => isNotInteger(sale.quantity) 
     || isLargerThan(sale.quantity, 1));
 
-  if (isNotValid) return { err: { code: codes.invalidData, message: erros.wrongIdOrQuant } };
+  if (isNotValid) {
+    return { 
+          err: { 
+            code: codes.invalidData, 
+            message: erros.wrongIdOrQuant }, 
+            statusCode: StatusCodes.UNPROCESSABLE_ENTITY }; 
+}
   return {};
 };
 
@@ -56,22 +63,26 @@ const saleRemoved = async (id) => {
   });
 };
 
-const isBiggestThan = (value1, value2) => (value1 <= value2);
+const isBiggestThan = (value1, value2) => (value1 > value2);
 
-const stockValidate = (sales) => {
-  // capturar o id do produto sale.productId
-  // capturar a quantidade das vendas
-  // capturar o produto pelo id findProductById(sale.productId)
-  // capturar a quantidade dos produtos cadastrados
-  // comparar se a quantidade da vendas é menor ou igual a de produtos cadastrados
+const stockValidate = async (sales) => {
+  const ZERO = 0;
+  const getProducts = await productModel.getAllProducts();
+  
+  for (let i = ZERO; i < sales.length; i += 1) {
+    const productSale = sales[i];
+    const findProduct = getProducts.find(({ _id }) => (
+      JSON.stringify(_id) === JSON.stringify(productSale.productId)));
+    const validation = isBiggestThan(productSale.quantity, findProduct.quantity);
+    if (validation) {
+    return {
+          err: { 
+            code: codes.stockProblem, 
+            message: erros.notPermittedSell }, 
+            statusCode: StatusCodes.NOT_FOUND }; 
+}
+  }
 
-  const validation = sales.some(async (sale) => {
-    const product = await productModel.findProductById(sale.productId);
-    isBiggestThan(sale.quantity, product.quantity);
-  });
-
-  if (!validation) return { err: { code: codes.stockProblem, message: erros.notPermittedSell } };
-  // erro para a validação
   return {};
 };
 

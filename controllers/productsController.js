@@ -17,7 +17,7 @@ const addProduct = (async (req, res) => {
 const getAllProducts = (async (_req, res) => {
   const products = await productsService.getAllProducts();
 
-  res.status(StatusCodes.OK).json(products);
+  res.status(StatusCodes.OK).json({ products });
 });
 
 const findProductById = (async (req, res) => {

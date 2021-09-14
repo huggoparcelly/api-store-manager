@@ -6,7 +6,7 @@ const addSale = (async (req, res) => {
   const newSale = await salesService.addSale(req.body);
 
   if (newSale.err) {
-    return res.status(StatusCodes.UNPROCESSABLE_ENTITY)
+    return res.status(newSale.statusCode)
        .json(newSale); 
    }
 

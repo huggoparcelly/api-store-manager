@@ -5,7 +5,7 @@ const addSale = async (sales) => {
   const validation = saleSchema.isValidQuantity(sales);
   if (validation.err) return validation;
 
-  const stockValidate = saleSchema.stockValidate(sales);
+  const stockValidate = await saleSchema.stockValidate(sales);
   if (stockValidate.err) return stockValidate;
 
   await saleSchema.updateQuantity(sales);
