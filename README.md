@@ -79,7 +79,7 @@ Para esse projeto, foi desenvolvido as seguintes habilidades
 
 # Endpoints
 
-### 1 - POST para cadastro de produtos
+### POST para cadastro de produtos
 
 - Acessível através do caminho (`/products`);
 
@@ -121,7 +121,7 @@ O projeto deve rodar na porta `http://localhost:3000`
 - A resposta do endpoint em caso de sucesso é o produto criado.
 
 
-### 2 - GET para retornar os produtos cadastrados
+### GET para retornar os produtos cadastrados
 
 - Acessível através do caminho (`/products`) ou (`/products/:id`);
 
@@ -130,7 +130,7 @@ O projeto deve rodar na porta `http://localhost:3000`
 - Através do caminho `/products/:id`, apenas o produto com o `id` presente na URL é retornado;
 
 
-### 3 - PUT para atualizar um produto
+### PUT para atualizar um produto
 
 - Acessível através do caminho (`/products/:id`);
 
@@ -139,14 +139,14 @@ O projeto deve rodar na porta `http://localhost:3000`
 - Apenas o produto com o `id` presente na URL será atualizado;
 
 
-### 4 - DELETE para deletar um produto
+### DELETE para deletar um produto
 
 - Acessível através do caminho (`/products/:id`);
 
 - Apenas o produto com o `id` presente na URL será deletado;
 
 
-### 5 - POST para cadastro de vendas
+### POST para cadastro de vendas
 
 - O endpoint deve ser acessível através do caminho (`/sales`);
 
@@ -191,7 +191,7 @@ O retorno de uma venda cadastrada com sucesso é:
 - A resposta do endpoint em caso de sucesso é a(s) venda(s) criada(s).
 
 
-### 6 - GET para retornar as vendas
+### GET para retornar as vendas
 
 - Acessível através do caminho (`/sales`) ou (`/sales/:id`);
 
@@ -200,7 +200,7 @@ O retorno de uma venda cadastrada com sucesso é:
 - Através do caminho `/sales/:id`, apenas a venda com o `id` presente na URL será retornada;
 
 
-### 7 - PUT para atualizar uma venda
+### PUT para atualizar uma venda
 
 - Acessível através do caminho (`/sales/:id`);
 
@@ -220,7 +220,7 @@ O retorno de uma venda cadastrada com sucesso é:
 - Apenas a venda com o `id` presente na URL será atualizada;
 
 
-### 8 - DELETE para deletar uma venda
+### DELETE para deletar uma venda
 
 - O endpoint deve ser acessível através do caminho (`/sales/:id`);
 
